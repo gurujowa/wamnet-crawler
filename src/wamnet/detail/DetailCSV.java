@@ -10,7 +10,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 public class DetailCSV  {
 
-	private String output_csv = "wamnet_detail";
+	private String output_csv = "csv/wamnet_detail";
 	private CSVWriter writer;
 
 	

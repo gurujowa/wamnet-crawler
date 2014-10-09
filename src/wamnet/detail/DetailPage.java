@@ -2,9 +2,12 @@ package wamnet.detail;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 public class DetailPage {
@@ -20,6 +23,7 @@ public class DetailPage {
 	private String title_path = "//*[@diffid=\"diff-c186\"]";
 	private String start_path = "//*[@diffid=\"diff-c187\"]";
 	private String url_path = "//*[@diffid=\"diff-c183\"]/a";
+	private String url_path2 = "//*[@diffid=\"diff-c183\"]";
 
 	private String c_category_path = "//*[@diffid=\"diff-c1\"]";
 	private String c_name_path = "//*[@diffid=\"diff-c4\"]";
@@ -38,23 +42,21 @@ public class DetailPage {
 		detail = new LinkedHashMap<String, String>();
 	}
 
-	public void parse() {
-		driver.findElement((By.xpath(place_tab))).click();
+	public boolean parse(String url) {
+		if (!accessPlaceTab()) {
+			System.err.println("Cant find URL. URL = " + url);
+			return false;
+		}
+		
 		parsePlace();
 		driver.findElement((By.xpath(company_tab))).click();
 		parseCompany();
 		driver.findElement((By.xpath(staff_tab))).click();
 		parseStaff();
-		String name = detail.get("事業所名");
-        System.out.println(name);
+		return true;
 	}
 	
-/*	public void writeHeader(CSVWriter writer) {
-		parse();
-		String[] str = detail.header();
-    	writer.writeNext(str);
-	}
-	*/
+
 	public boolean isPageFound() {
 		if (driver.findElement(By.className("error")).getText() == "該当するページが見つかりませんでした。") {
 			return true;
@@ -72,14 +74,17 @@ public class DetailPage {
 
 		for (int i = 0;; i++) {
 		    try {
-		    	parse();
+		    	parse(url);
 		        break;
 		    } catch (UnreachableBrowserException e) {
 		        if (i > 10) {
 		            throw e;
 		        }
+		    } catch (NoSuchElementException e) {
+		    	System.out.println("No Such Element. URL = " + url);
+		    	throw e;
+		    	
 		    }
-		    Thread.sleep(1000);
 		}
 		
 	}
@@ -116,7 +121,26 @@ public class DetailPage {
     	detail.put("管理者", driver.findElement((By.xpath(leader_path))).getText());
     	detail.put("役職",driver.findElement((By.xpath(title_path))).getText());
     	detail.put("事業開始日",driver.findElement((By.xpath(start_path))).getText());
-    	detail.put("会社URL",driver.findElement((By.xpath(url_path))).getText());    	
+    	detail.put("会社URL",parseURL());    	
+	}
+	
+	private String parseURL() {
+		List<WebElement> el = driver.findElements(By.xpath(url_path));
+		if (el.isEmpty()) {
+		  return  driver.findElement(By.xpath(url_path2)).getAttribute("href");
+		} else {
+  		  return el.get(0).getAttribute("href");
+		}
+		
+	}
+	
+	private boolean accessPlaceTab() {
+		try {
+			driver.findElement((By.xpath(place_tab))).click();
+			return true;
+		} catch(NoSuchElementException e) {
+			return false;
+		}
 	}
 
 }

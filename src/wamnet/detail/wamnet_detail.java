@@ -14,7 +14,7 @@ import wamnet.ListCSVLine;
 
 public class wamnet_detail {
 
-	private static String csv_file_name = "wamnet_input.csv";
+	private static String csv_file_name = "csv/wamnet_input.csv";
 
 	private static WebDriver driver;
 

@@ -1,5 +1,6 @@
 package wamnet;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -9,132 +10,75 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 
 public class ResultLine {
-	
+
 	private WebDriver driver;
 	private String[] result;
-	private String tr_xpath;
-	
-	public ResultLine(String tr_xpath, WebDriver dr) {
+	private WebElement box;
+
+	public ResultLine(WebElement box, WebDriver dr) {
 		this.driver = dr;
 		result = new String[7];
-		this.tr_xpath = tr_xpath;
-	}
-	
-	public void getResult () throws MalformedURLException, InterruptedException {
-		readXPath();		
+		this.box = box;
 	}
 
-	private String getResultURL(String tr_path) throws MalformedURLException {
-		String td_xpath = tr_xpath + "/td[5]/div[1]/input";
-		By xpath = By.xpath(td_xpath);
-    	WebElement el =  this.driver.findElement(xpath);    	
-    	String onclick = el.getAttribute("onclick").replace("parent.location.href='index.php", "").replace("';", "");
-    	URL current_url = new URL(driver.getCurrentUrl());
-    	return "http://" + current_url.getHost() + current_url.getPath() + onclick;
-	}
-	
-	private boolean readXPath() throws MalformedURLException {
-		int error = 0;
-		do {
-			if (setByXpath()) {
-				return true;
-			}
-			sleep(5000);
-			error++;
-		} while (error <= 5);
-		
-		
-		throw new NoSuchElementException("‹K’è‚Ì“Ç‚Ýž‚ÝŽ¸”s‰ñ”‚ð’´‚¦‚Ü‚µ‚½B" + tr_xpath);
-	}
-	
-    private static void sleep(int microtime) {
-        try {
-            Thread.sleep(microtime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-	
-	private boolean setByXpath() throws MalformedURLException {
+	public boolean getResult() throws MalformedURLException, InterruptedException {
 		try {
-			result[0] = getName(tr_xpath);
-			result[1] = getZipcode(tr_xpath);
-			result[2] = getAddress(tr_xpath);
-			result[3] = getTel(tr_xpath);
-			result[4] = getFax(tr_xpath);
-			result[5] = getCategory(tr_xpath);		
-			result[6] = getResultURL(this.tr_xpath);
-			
+			result[0] = getLine("./table/tbody/tr[2]/td/div/a");
+			result[1] = getLine("//td[@class=\"listAddress\"]/span[@class=\"postalCode\"]");
+			result[2] = getLine("//td[@class=\"listAddress\"]");
+			result[3] = getLine("//td[@class=\"tel \"]");
+			result[4] = getLine("//td[@class=\"tel \"]");
+			result[5] = getLine("//span[@class=\"listService yellow\"]");
+			result[6] = getResultURL();
 			return true;
-		} catch(NoSuchElementException e) {
+		} catch (NoSuchElementException e) {
+			System.err.println(e.getMessage());
 			return false;
-		} catch(UnreachableBrowserException e) {
+		} catch (UnreachableBrowserException e) {
 			System.err.println(e.getClass());
 			System.err.println(e.getMessage());
-			sleep(30000);
 			return false;
 		}
 	}
-
 	
-	private String getName(String tr_xpath) {
-		String td_xpath = tr_xpath + "/td[3]/div[1]/a";
-		By xpath = By.xpath(td_xpath);
-    	WebElement el =  this.driver.findElement(xpath);    	
-    	return el.getText();
+
+	private String getLine(String xpath) {
+		WebElement el = box.findElement(By.xpath(xpath));
+		return el.getText();
 	}
 
-	private String getZipcode(String tr_xpath) {
-		WebElement el =  this.driver.findElement(By.xpath(tr_xpath + "/td[3]/div[2]"));    	
-    	return el.getText();
+
+	private String getResultURL() throws MalformedURLException {
+		WebElement el = box.findElement(By.xpath("//div[@class=\"listFooter\"]//div[@class=\"tableHalfRight\"]//a"));
+		String onclick = el.getAttribute("onclick").replace("';", "");
+		URL current_url = new URL(driver.getCurrentUrl());
+		return "http://" + current_url.getHost() + current_url.getPath() + onclick;
 	}
 
-	private String getAddress(String tr_xpath) {
-		WebElement el =  this.driver.findElement(By.xpath(tr_xpath + "/td[3]/div[3]"));    	
-    	return el.getText();
+
+	public void exportCSV(CSVWriter writer) throws IOException {
+		writer.writeNext(result);
+		writer.flush();
 	}
 
-	private String getTel(String tr_xpath) {
-		WebElement el =  this.driver.findElement(By.xpath(tr_xpath + "/td[4]/div[1]"));    	
-    	String text =  el.getText();
-    	text = text.replace("]", "-");
-    	text = text.replace("[", "-");
-    	return zenHan(text);
-	}	
-
-	private String getFax(String tr_xpath) {
-		WebElement el =  this.driver.findElement(By.xpath(tr_xpath + "/td[4]/div[2]"));    	
-    	String text = el.getText();
-    	text = text.replace("]", "-");
-    	text = text.replace("[", "-");
-    	return zenHan(text);
-	}	
-	
-	private String getCategory(String tr_xpath) {
-		WebElement el =  this.driver.findElement(By.xpath(tr_xpath + "/td[6]/div[1]"));    	
-    	return el.getText();
-	}
-	
-	public void exportCSV(CSVWriter writer) {
-    	writer.writeNext(result);		
-	}
-
-	 /**
-	   * ‘SŠp”Žš‚ð”¼Šp‚É•ÏŠ·‚µ‚Ü‚·B
-	   * @param s •ÏŠ·Œ³•¶Žš—ñ
-	   * @return •ÏŠ·Œã•¶Žš—ñ
-	   */
+	/**
+	 * ‘SŠp”Žš‚ð”¼Šp‚É•ÏŠ·‚µ‚Ü‚·B
+	 * 
+	 * @param s
+	 *            •ÏŠ·Œ³•¶Žš—ñ
+	 * @return •ÏŠ·Œã•¶Žš—ñ
+	 */
 	private static String zenHan(String s) {
-	    StringBuffer sb = new StringBuffer(s);
-	    for (int i = 0; i < sb.length(); i++) {
-	      char c = sb.charAt(i);
-	      if (c >= '‚O' && c <= '‚X') {
-	        sb.setCharAt(i, (char)(c - '‚O' + '0'));
-	      }
-	    }
-	    return sb.toString();
-	  }
+		StringBuffer sb = new StringBuffer(s);
+		for (int i = 0; i < sb.length(); i++) {
+			char c = sb.charAt(i);
+			if (c >= '‚O' && c <= '‚X') {
+				sb.setCharAt(i, (char) (c - '‚O' + '0'));
+			}
+		}
+		return sb.toString();
+	}
 }

@@ -4,14 +4,17 @@ package wamnet;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 
  public class wamnet_test {
 	
@@ -23,6 +26,7 @@ import au.com.bytecode.opencsv.CSVWriter;
  
     public static void main(String[] args) throws IOException, InterruptedException {
         RemoteWebDriver driver = new FirefoxDriver();
+        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         writer  = new CSVWriter(new FileWriter(csv_file_name));
         writer.flush();
         
@@ -38,13 +42,13 @@ import au.com.bytecode.opencsv.CSVWriter;
     }
     
     private static void searchResultTable(WebDriver driver) throws IOException, InterruptedException {        
-        String table_path = "//*[@id='searchResult']/tbody/";
-        String tr_xpath;
+        String box_xpath = "//*[@id=\"searchResult\"]//div[@class=\"listHeader\"]";
+        List<WebElement> list_box = driver.findElements(By.xpath(box_xpath));
         ResultLine line;
         
-        for(int i=1;i<=5;i++) {
-          	tr_xpath = table_path + "tr[" + i + "]";
-            line = new ResultLine(tr_xpath, driver);
+        for(WebElement box: list_box) {
+        	
+            line = new ResultLine(box, driver);
             line.getResult();
         	line.exportCSV(writer);
         }

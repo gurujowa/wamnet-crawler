@@ -18,7 +18,7 @@ import com.opencsv.CSVWriter;
 
  public class wamnet_test {
 	
-	 private static String read_url = "http://www.kaigokensaku.jp/10/index.php?action_kouhyou_pref_search_list_list=true&PrefCd=10";
+	 private static String read_url = "http://www.kaigokensaku.jp/12/index.php?action_kouhyou_pref_search_list_list=true&PrefCd=12";
 	 private static String csv_file_name = "wamnet_output.csv";
 	 private static int turn_for = 3000;
 	 
@@ -31,7 +31,7 @@ import com.opencsv.CSVWriter;
         writer.flush();
         
         driver.get(read_url);
- //       driver.executeScript("pagerForm(1750,5,null,null);");
+        driver.executeScript("pagerForm(5000,5,null,null);");
         driver.switchTo().frame(driver.findElement(By.id("resultListFrame")));
         for (int i=1;i<=turn_for;i++) {
             searchResultTable(driver);
@@ -42,7 +42,7 @@ import com.opencsv.CSVWriter;
     }
     
     private static void searchResultTable(WebDriver driver) throws IOException, InterruptedException {        
-        String box_xpath = "//*[@id=\"searchResult\"]//div[@class=\"listHeader\"]";
+        String box_xpath = "//*[@id=\"searchResult\"]//li[@class=\"listLi\"]";
         List<WebElement> list_box = driver.findElements(By.xpath(box_xpath));
         ResultLine line;
         

@@ -26,12 +26,12 @@ public class ResultLine {
 
 	public boolean getResult() throws MalformedURLException, InterruptedException {
 		try {
-			result[0] = getLine("./table/tbody/tr[2]/td/div/a");
-			result[1] = getLine("//td[@class=\"listAddress\"]/span[@class=\"postalCode\"]");
-			result[2] = getLine("//td[@class=\"listAddress\"]");
-			result[3] = getLine("//td[@class=\"tel \"]");
-			result[4] = getLine("//td[@class=\"tel \"]");
-			result[5] = getLine("//span[@class=\"listService yellow\"]");
+			result[0] = getLine(".//div[@class=\"listHeader\"]/table/tbody/tr[2]/td/div/a");
+			result[1] = getLine(".//td[@class=\"listAddress\"]/span[@class=\"postalCode\"]");
+			result[2] = getLine(".//td[@class=\"listAddress\"]");
+			result[3] = getLine(".//td[contains(@class,\"tel\")]");
+			result[4] = getLine(".//td[contains(@class,\"tel\")]");
+			result[5] = getLine(".//span[@class=\"listService yellow\"]");
 			result[6] = getResultURL();
 			return true;
 		} catch (NoSuchElementException e) {

@@ -69,7 +69,7 @@ public class DetailPage {
 		return this.detail;
 	}
 	
-	public void accessURL(String url) throws IOException, InterruptedException {
+	public DetailPage accessURL(String url) throws IOException, InterruptedException {
 		driver.get(url);
 
 		for (int i = 0;; i++) {
@@ -86,7 +86,7 @@ public class DetailPage {
 		    	
 		    }
 		}
-		
+		return this;
 	}
 	
 	private void parseStaff() {

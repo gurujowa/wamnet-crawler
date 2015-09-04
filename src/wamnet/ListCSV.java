@@ -11,30 +11,28 @@ import com.opencsv.CSVReader;
 
 public class ListCSV {
 	
-	private Iterator<ListCSVLine> it;
+	private Iterator<String[]> it;
 
 	public ListCSV(File csv_file) throws IOException {
-    	String [] line;
-    	ListCSVLine csv;
-    	List<ListCSVLine> list = new ArrayList<ListCSVLine>();
+    	String[] line;
+    	List<String[]> list = new ArrayList<String[]>();
 
 		CSVReader reader = new CSVReader(new FileReader(csv_file));
     	reader.readNext();
     	
     	while ((line = reader.readNext()) != null) {
-    		csv = new ListCSVLine(line);
-    		list.add(csv);
+    		list.add(line);
     	}
     	
     	it = list.iterator();
     	reader.close();
 	}
 	
-	public Iterator<ListCSVLine> getAll() {
+	public Iterator<String[]> getAll() {
 		return it;
 	}
 	
-	public ListCSVLine next() {
+	public String[] next() {
 		if (it.hasNext() == true) {
     		return it.next();
 		} else {

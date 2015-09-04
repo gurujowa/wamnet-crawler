@@ -52,7 +52,7 @@ public class ResultLine {
 
 
 	private String getResultURL() throws MalformedURLException {
-		WebElement el = box.findElement(By.xpath("//div[@class=\"listFooter\"]//div[@class=\"tableHalfRight\"]//a"));
+		WebElement el = box.findElement(By.xpath(".//div[@class=\"listFooter\"]//div[@class=\"tableHalfRight\"]//a"));
 		String onclick = el.getAttribute("onclick").replace("';", "");
 		URL current_url = new URL(driver.getCurrentUrl());
 		return "http://" + current_url.getHost() + current_url.getPath() + onclick;

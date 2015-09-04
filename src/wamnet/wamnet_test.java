@@ -13,6 +13,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.opencsv.CSVWriter;
 
@@ -31,10 +33,13 @@ import com.opencsv.CSVWriter;
         writer.flush();
         
         driver.get(read_url);
-        driver.executeScript("pagerForm(5000,5,null,null);");
+        //driver.executeScript("pagerForm(5000,5,null,null);");
         driver.switchTo().frame(driver.findElement(By.id("resultListFrame")));
         for (int i=1;i<=turn_for;i++) {
             searchResultTable(driver);
+            if(i%200 == 5) {
+              reloadTable(driver,i);
+            }
         }
         driver.quit();
       	writer.close();
@@ -68,6 +73,15 @@ import com.opencsv.CSVWriter;
         } catch(UnreachableBrowserException e) {
         	return false;
         }
+    }
+    
+    private static void reloadTable(RemoteWebDriver driver, int page) {
+    	System.out.println("reload Table");
+    	WebDriverWait wait = new WebDriverWait(driver, 5);
+        driver.get(read_url);
+        driver.switchTo().frame(driver.findElement(By.id("resultListFrame")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("ŽŸ‚Ö")));
+        driver.executeScript("pagerForm(" + ((page-1) * 5) + ",5,null,null);");
     }
     
 }

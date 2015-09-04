@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.opencsv.CSVWriter;
 
 public class DetailCSV  {
@@ -28,9 +30,10 @@ public class DetailCSV  {
 	}
 
 
-	public void writeLine(HashMap<String,String> map) throws IOException {
-		String[] str = map.values().toArray(new String[0]);
-    	writer.writeNext(str);
+	public void writeLine(HashMap<String,String> detail,String[] list) throws IOException {
+		String[] str = detail.values().toArray(new String[0]);
+		String[] write_line = ArrayUtils.addAll(str, list);
+    	writer.writeNext(write_line);
     	writer.flush();
 	}
 	

@@ -80,11 +80,7 @@ public class DetailPage {
 		        if (i > 10) {
 		            throw e;
 		        }
-		    } catch (NoSuchElementException e) {
-		    	System.out.println("No Such Element. URL = " + url);
-		    	throw e;
-		    	
-		    }
+		    } 
 		}
 		return this;
 	}

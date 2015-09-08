@@ -1,6 +1,6 @@
 package wamnet.detail;
 
-import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import wamnet.ListCSV;
+import com.opencsv.CSVReader;
 
 
 public class wamnet_detail {
@@ -22,16 +22,23 @@ public class wamnet_detail {
 		RemoteWebDriver driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
-		ListCSV list_csv = new ListCSV(new File(csv_file_name));
 		DetailCSV detail_csv = new DetailCSV();
 		String[] line;
 		
+		CSVReader reader = new CSVReader(new FileReader(csv_file_name));
 		
-     	while ((line = list_csv.next()) != null) {
+		int iteration = 0;
+     	while ((line = reader.readNext()) != null) {
 				DetailPage page = new DetailPage(driver);
 				HashMap<String, String> map = page.accessURL(line[6].replace("kani", "kihon")).getMap();
+			    if(iteration == 0) {
+					detail_csv.writeHeader(map);
+			        iteration++;  
+			    } 
 				detail_csv.writeLine(map,line);
 		}
+     	
+     	reader.close();
 
 	}
 

@@ -64,21 +64,4 @@ public class ResultLine {
 		writer.flush();
 	}
 
-	/**
-	 * ‘SŠp”š‚ğ”¼Šp‚É•ÏŠ·‚µ‚Ü‚·B
-	 * 
-	 * @param s
-	 *            •ÏŠ·Œ³•¶š—ñ
-	 * @return •ÏŠ·Œã•¶š—ñ
-	 */
-	private static String zenHan(String s) {
-		StringBuffer sb = new StringBuffer(s);
-		for (int i = 0; i < sb.length(); i++) {
-			char c = sb.charAt(i);
-			if (c >= '‚O' && c <= '‚X') {
-				sb.setCharAt(i, (char) (c - '‚O' + '0'));
-			}
-		}
-		return sb.toString();
-	}
 }

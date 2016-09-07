@@ -86,7 +86,7 @@ public class DetailPage {
 	}
 	
 	private void parseStaff() {
-    	detail.put("介護専門員（男性）",driver.findElement((By.xpath(man_path))).getText());
+    	detail.put("staff",driver.findElement((By.xpath(man_path))).getText());
     	detail.put("介護専門員（女性）",driver.findElement((By.xpath(woman_path))).getText());
     	detail.put("訪問介護員（常勤・専従）",driver.findElement((By.xpath("//*[@diffid=\"diff-c195\"]"))).getText());
     	detail.put("訪問介護員（常勤・非専従）",driver.findElement((By.xpath("//*[@diffid=\"diff-c196\"]"))).getText());
@@ -103,21 +103,21 @@ public class DetailPage {
 	}
 	
 	private void parseCompany() {
-    	detail.put("法人の種類",driver.findElement((By.xpath(c_category_path))).getText());
-    	detail.put("法人名",driver.findElement((By.xpath(c_name_path))).getText());
-    	detail.put("法人の住所",driver.findElement((By.xpath(c_address_path))).getText());
-    	detail.put("法人の電話番号",driver.findElement((By.xpath(c_tel_path))).getText());
-    	detail.put("法人のFAX",driver.findElement((By.xpath(c_fax_path))).getText());
-    	detail.put("法人代表者",driver.findElement((By.xpath(c_person_path))).getText());
-    	detail.put("法人職名",driver.findElement((By.xpath(c_title_path))).getText());
+    	detail.put("company",driver.findElement((By.xpath(c_category_path))).getText());
+    	detail.put("company_name",driver.findElement((By.xpath(c_name_path))).getText());
+    	detail.put("company_address",driver.findElement((By.xpath(c_address_path))).getText());
+    	detail.put("company_tel",driver.findElement((By.xpath(c_tel_path))).getText());
+    	detail.put("company_fax",driver.findElement((By.xpath(c_fax_path))).getText());
+    	detail.put("compony_person",driver.findElement((By.xpath(c_person_path))).getText());
+    	detail.put("compony_post",driver.findElement((By.xpath(c_title_path))).getText());
 		
 	}
 
 	private void parsePlace() {
-    	detail.put("管理者", driver.findElement((By.xpath(leader_path))).getText());
-    	detail.put("役職",driver.findElement((By.xpath(title_path))).getText());
-    	detail.put("事業開始日",driver.findElement((By.xpath(start_path))).getText());
-    	detail.put("会社URL",parseURL());    	
+    	detail.put("client_person", driver.findElement((By.xpath(leader_path))).getText());
+    	detail.put("client_post",driver.findElement((By.xpath(title_path))).getText());
+    	detail.put("start",driver.findElement((By.xpath(start_path))).getText());
+    	detail.put("url",parseURL());    	
 	}
 	
 	private String parseURL() {

@@ -26,7 +26,7 @@ public class wamnet_detail {
 		String[] line;
 		
 		CSVReader reader = new CSVReader(new FileReader(csv_file_name));
-		
+		 
 		int iteration = 0;
      	while ((line = reader.readNext()) != null) {
 				DetailPage page = new DetailPage(driver);

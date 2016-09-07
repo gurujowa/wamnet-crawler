@@ -23,21 +23,25 @@ public class ResultLine {
 		result = new String[7];
 		this.box = box;
 	}
+	
+
 
 	public boolean getResult() throws MalformedURLException, InterruptedException {
+		Thread.sleep(3000);
 		try {
 			result[0] = getLine(".//div[@class=\"listHeader\"]/table/tbody/tr[2]/td/div/a");
 			result[1] = getLine(".//td[@class=\"listAddress\"]/span[@class=\"postalCode\"]");
 			result[2] = getLine(".//td[@class=\"listAddress\"]");
-			result[3] = getLine(".//td[contains(@class,\"tel\")]");
-			result[4] = getLine(".//td[contains(@class,\"tel\")]");
+			String[] telfax = getLine(".//td[contains(@class,\"tel\")]").split("\n");
+			result[3] = telfax[0];
+			result[4] = telfax[1];
 			result[5] = getLine(".//span[@class=\"listService yellow\"]");
 			result[6] = getResultURL();
 			return true;
 		} catch (NoSuchElementException e) {
 			System.err.println(e.getMessage());
 			return false;
-		} catch (UnreachableBrowserException e) {
+		}  catch (UnreachableBrowserException e) {
 			System.err.println(e.getClass());
 			System.err.println(e.getMessage());
 			return false;

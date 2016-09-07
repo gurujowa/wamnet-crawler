@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -20,7 +21,7 @@ import com.opencsv.CSVWriter;
 
  public class wamnet_test {
 	
-	 private static String read_url = "http://www.kaigokensaku.jp/12/index.php?action_kouhyou_pref_search_list_list=true&PrefCd=12";
+	 private static String read_url = "http://www.kaigokensaku.jp/08/index.php?action_kouhyou_pref_search_list_list=true&PrefCd=08";
 	 private static String csv_file_name = "wamnet_output.csv";
 	 private static int turn_for = 3000;
 	 
@@ -31,6 +32,7 @@ import com.opencsv.CSVWriter;
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         writer  = new CSVWriter(new FileWriter(csv_file_name));
         writer.flush();
+        
         
         driver.get(read_url);
         //driver.executeScript("pagerForm(5000,5,null,null);");
@@ -47,12 +49,11 @@ import com.opencsv.CSVWriter;
     }
     
     private static void searchResultTable(WebDriver driver) throws IOException, InterruptedException {        
-        String box_xpath = "//*[@id=\"searchResult\"]//li[@class=\"listLi\"]";
+        String box_xpath = "//*[@id=\"searchResult\"]/ul/li";
         List<WebElement> list_box = driver.findElements(By.xpath(box_xpath));
         ResultLine line;
         
         for(WebElement box: list_box) {
-        	
             line = new ResultLine(box, driver);
             line.getResult();
         	line.exportCSV(writer);

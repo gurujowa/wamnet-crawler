@@ -27,7 +27,6 @@ public class ResultLine {
 
 
 	public boolean getResult() throws MalformedURLException, InterruptedException {
-		Thread.sleep(3000);
 		try {
 			result[0] = getLine(".//div[@class=\"listHeader\"]/table/tbody/tr[2]/td/div/a");
 			result[1] = getLine(".//td[@class=\"listAddress\"]/span[@class=\"postalCode\"]");

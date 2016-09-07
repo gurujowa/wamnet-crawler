@@ -11,10 +11,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.opencsv.CSVWriter;
@@ -81,7 +79,7 @@ import com.opencsv.CSVWriter;
     	WebDriverWait wait = new WebDriverWait(driver, 5);
         driver.get(read_url);
         driver.switchTo().frame(driver.findElement(By.id("resultListFrame")));
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("ŽŸ‚Ö")));
+        driver.findElement(By.partialLinkText("ŽŸ‚Ö"));
         driver.executeScript("pagerForm(" + ((page-1) * 5) + ",5,null,null);");
     }
     
